@@ -1,3 +1,35 @@
 ###
 
 GET localhost:8081/hello
+
+###
+POST localhost:8071/update/1/808
+
+###
+POST localhost:8071/update/2/606
+
+###
+POST localhost:8071/update/2/-12
+
+###
+POST localhost:8071/update/3/202
+
+###
+POST localhost:8071/transfer
+Content-Type: application/json
+
+{
+  "sourceId": 1,
+  "destinationId": 2,
+  "value": 8
+}
+
+###
+POST localhost:8071/transfer
+Content-Type: application/json
+
+{
+  "sourceId": 2,
+  "destinationId": 3,
+  "value": 9999
+}
