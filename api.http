@@ -21,7 +21,7 @@ Content-Type: application/json
 {
   "sourceId": 1,
   "destinationId": 2,
-  "value": 8
+  "value": 16
 }
 
 ###
@@ -31,5 +31,5 @@ Content-Type: application/json
 {
   "sourceId": 2,
   "destinationId": 3,
-  "value": 9999
+  "value": 128
 }
