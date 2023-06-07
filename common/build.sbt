@@ -9,7 +9,7 @@ val AkkaHttpJsonVersion = "1.39.2"
 lazy val slickVersion = "3.3.3"
 lazy val postgresVersion = "42.3.1"
 
-lazy val root = (project in file("."))
+lazy val common = (project in file("."))
   .settings(
     name := "common",
     libraryDependencies ++= Seq(
