@@ -4,7 +4,7 @@ import model.Account
 
 import scala.concurrent.Future
 
-class Repository (accountId: Int, defAmount: Int) {
+class Repository(val accountId: Int, defAmount: Int){
   var account = Account(accountId, defAmount)
 
   def update(value: Int): Future[Account] = {

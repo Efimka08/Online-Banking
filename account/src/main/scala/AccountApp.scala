@@ -20,8 +20,10 @@ object AccountApp extends App {
   private val repository = new Repository(accountId, defAmount)
   private val streams = new Streams(repository)
 
+  val rand = new scala.util.Random
   implicit val commandTopicName: TopicName[AccountUpdate] = streams.simpleTopicName[AccountUpdate]
-  streams.produceCommand(AccountUpdate(100))
+  streams.produceCommand(AccountUpdate(1, rand.nextInt(1000)))
+  streams.produceCommand(AccountUpdate(2, rand.nextInt(1000)))
 
   private val route = new Route()
 

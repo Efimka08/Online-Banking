@@ -1,28 +1,32 @@
 package kafka
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import io.circe.generic.auto._
+
+import akka.stream.scaladsl.Sink
 import commonkafka.WithKafka
 import repository.Repository
-import io.circe.generic.auto._
+
 import model.{AccountUpdate, AccountUpdated}
 
 import scala.concurrent.ExecutionContext
 
 class Streams(repository: Repository)(implicit val system: ActorSystem, executionContext: ExecutionContext) extends WithKafka {
 
-  def group = "kafka-demo-2"
+  def group = s"account-${repository.accountId}"
 
   kafkaSource[AccountUpdate]
-    .mapAsync(1)(command => repository.update(command.value))
-    .map(account => AccountUpdated(account.id, account.amount))
-    .to(kafkaSink)
+    .filter(command => repository.account.id == command.accountId && repository.account.amount + command.value >= 0)
+    .mapAsync(1) { command =>
+      repository.update(command.value).map(_ => AccountUpdated(command.accountId, command.value))
+    }
     .run()
 
   kafkaSource[AccountUpdated]
-    .map { event =>
-      println(s"Получено событие: $event")
-      event
+    .filter(event => repository.account.id == event.accountId)
+    .map { e =>
+      println(s"Аккаунт ${e.accountId} обновлен на сумму ${e.value}. Баланс: ${repository.account.amount}")
+      e
     }
     .to(Sink.ignore)
     .run()
