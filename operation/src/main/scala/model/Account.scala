@@ -7,7 +7,7 @@ case class Account(id: Int, amount: Int) {
 }
 
 trait Command
-case class AccountUpdate(accountId: Int, value: Int)
+case class AccountUpdate(accountId: Int, value: Int, category: Option[String])
 
 trait Event
-case class AccountUpdated(accountId: Int, value: Int)
+case class AccountUpdated(accountId: Int, value: Int, category: Option[String])

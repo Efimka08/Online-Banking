@@ -17,7 +17,12 @@ class AccountStreams(repository: Repository)(implicit val system: ActorSystem, e
     kafkaSource[AccountUpdate]
         .filter(command => repository.account.id == command.accountId && repository.account.amount + command.value >= 0)
         .mapAsync(1) { command =>
-            repository.update(command.value).map(_ => AccountUpdated(command.accountId, command.value))
+            repository
+              .update(command.value)
+              .map(_ => AccountUpdated(
+                  accountId = command.accountId,
+                  value = command.value,
+                  category = command.category))
         }
         .to(kafkaSink)
         .run()

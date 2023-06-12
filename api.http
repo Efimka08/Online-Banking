@@ -3,16 +3,16 @@
 GET localhost:8081/hello
 
 ###
-POST localhost:8071/update/1/808
+POST localhost:8071/update/1/808/refill
 
 ###
-POST localhost:8071/update/2/606
+POST localhost:8071/update/2/606/refill
 
 ###
-POST localhost:8071/update/2/-12
+POST localhost:8071/update/2/-12/withdraw
 
 ###
-POST localhost:8071/update/3/202
+POST localhost:8071/update/3/202/refill
 
 ###
 POST localhost:8071/transfer
@@ -21,7 +21,8 @@ Content-Type: application/json
 {
   "sourceId": 1,
   "destinationId": 2,
-  "value": 16
+  "value": 16,
+  "category": "taxi"
 }
 
 ###
@@ -31,5 +32,6 @@ Content-Type: application/json
 {
   "sourceId": 2,
   "destinationId": 3,
-  "value": 128
+  "value": 128,
+  "category": "supermarket"
 }

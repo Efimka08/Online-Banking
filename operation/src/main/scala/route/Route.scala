@@ -20,8 +20,9 @@ class Route(streams: OperationStreams, repository: Repository)(implicit ec: Exec
         (path("hello") & get) {
             complete("ok")
         } ~
-            (path("update" / IntNumber / IntNumber) { (accountId, value) =>
-                val command = AccountUpdate(accountId, value)
+            (path("update" / IntNumber / Segment / Segment) { (accountId, valueStr, category) =>
+                val value = valueStr.toInt
+                val command = AccountUpdate(accountId, value, Some(category))
                 streams.produceCommand(command)
                 complete(command)
             }) ~
