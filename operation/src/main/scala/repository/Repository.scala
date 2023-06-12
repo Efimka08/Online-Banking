@@ -1,12 +1,12 @@
 package repository
 
 import commonkafka.TopicName
-import kafka.Streams
+import kafka.OperationStreams
 import model.{Account, AccountUpdate, TransferStart}
 import io.circe.generic.auto._
 import scala.concurrent.Future
 
-class Repository(streams: Streams){
+class Repository(streams: OperationStreams){
     implicit val commandTopicName: TopicName[AccountUpdate] = streams.simpleTopicName[AccountUpdate]
 
     def transfer(transfer: TransferStart) = {

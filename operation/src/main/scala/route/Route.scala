@@ -5,14 +5,14 @@ import akka.http.scaladsl.server.Directives._
 import io.circe.generic.auto._
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import commonkafka.TopicName
-import kafka.Streams
+import kafka.OperationStreams
 import model.{AccountUpdate, TransferStart}
 import repository.Repository
 
 import scala.concurrent.ExecutionContext
 
 
-class Route(streams: Streams, repository: Repository)(implicit ec: ExecutionContext) extends FailFastCirceSupport {
+class Route(streams: OperationStreams, repository: Repository)(implicit ec: ExecutionContext) extends FailFastCirceSupport {
 
     implicit val commandTopicName: TopicName[AccountUpdate] = streams.simpleTopicName[AccountUpdate]
 

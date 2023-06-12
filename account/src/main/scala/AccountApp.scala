@@ -1,7 +1,7 @@
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import com.typesafe.config.ConfigFactory
-import kafka.Streams
+import kafka.AccountStreams
 import model.AccountUpdate
 import repository.Repository
 import commonkafka.TopicName
@@ -20,7 +20,7 @@ object AccountApp extends App  {
 
 
     private val repository = new Repository(accountId, defAmount)
-    private val streams = new Streams(repository)
+    private val streams = new AccountStreams(repository)
 
     //val rand = new scala.util.Random
     //implicit val commandTopicName: TopicName[AccountUpdate] = streams.simpleTopicName[AccountUpdate]

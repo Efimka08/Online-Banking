@@ -9,7 +9,7 @@ import repository.Repository
 
 import scala.concurrent.ExecutionContext
 
-class Streams(repository: Repository)(implicit val system: ActorSystem, executionContext: ExecutionContext)
+class AccountStreams(repository: Repository)(implicit val system: ActorSystem, executionContext: ExecutionContext)
     extends WithKafka {
 
     def group = s"account-${repository.accountId}"

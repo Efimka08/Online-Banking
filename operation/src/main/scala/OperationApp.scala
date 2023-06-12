@@ -1,7 +1,7 @@
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import com.typesafe.config.ConfigFactory
-import kafka.Streams
+import kafka.OperationStreams
 import model.AccountUpdate
 import repository.Repository
 import route.Route
@@ -15,7 +15,7 @@ object OperationApp extends App  {
   implicit val ec = system.dispatcher
   val port = ConfigFactory.load().getInt("port")
 
-  private val streams = new Streams()
+  private val streams = new OperationStreams()
   private val repository = new Repository(streams)
 
   private val route = new Route(streams, repository)
