@@ -22,10 +22,6 @@ object AccountApp extends App  {
     private val repository = new Repository(accountId, defAmount)
     private val streams = new AccountStreams(repository)
 
-    //val rand = new scala.util.Random
-    //implicit val commandTopicName: TopicName[AccountUpdate] = streams.simpleTopicName[AccountUpdate]
-    //streams.produceCommand(AccountUpdate(1, rand.nextInt(1000)))
-    //streams.produceCommand(AccountUpdate(2, rand.nextInt(1000)))
 
     private val route = new Route(repository)
     Http().newServerAt("0.0.0.0", port).bind(route.routes)
