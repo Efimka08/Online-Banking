@@ -30,7 +30,7 @@ class AccountStreams(repository: Repository)(implicit val system: ActorSystem, e
     kafkaSource[AccountUpdated]
         .filter(event => repository.getAccount(event.accountId).nonEmpty)
         .map { e =>
-            println(s"Аккаунт ${e.accountId} обновлен на сумму ${e.value}. Баланс: ${repository.getAccount(e.accountId).get.amount}")
+            println(s"Счет ${e.accountId} обновлен на сумму ${e.value}. Баланс: ${repository.getAccount(e.accountId).get.amount}")
             e
         }
         .to(Sink.ignore)
