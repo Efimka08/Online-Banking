@@ -27,6 +27,6 @@ object AccountApp extends App  {
     //streams.produceCommand(AccountUpdate(1, rand.nextInt(1000)))
     //streams.produceCommand(AccountUpdate(2, rand.nextInt(1000)))
 
-    private val route = new Route()
+    private val route = new Route(repository)
     Http().newServerAt("0.0.0.0", port).bind(route.routes)
 }

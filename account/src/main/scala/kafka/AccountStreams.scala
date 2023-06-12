@@ -15,10 +15,10 @@ class AccountStreams(repository: Repository)(implicit val system: ActorSystem, e
     def group = s"account-${repository.accountId}"
 
     kafkaSource[AccountUpdate]
-        .filter(command => repository.account.id == command.accountId && repository.account.amount + command.value >= 0)
+        .filter(command => repository.getAccount(command.accountId).exists(_.amount + command.value >= 0))
         .mapAsync(1) { command =>
             repository
-              .update(command.value)
+              .update(command.accountId, command.value)
               .map(_ => AccountUpdated(
                   accountId = command.accountId,
                   value = command.value,
@@ -28,9 +28,9 @@ class AccountStreams(repository: Repository)(implicit val system: ActorSystem, e
         .run()
 
     kafkaSource[AccountUpdated]
-        .filter(event => repository.account.id == event.accountId)
+        .filter(event => repository.getAccount(event.accountId).nonEmpty)
         .map { e =>
-            println(s"Аккаунт ${e.accountId} обновлен на сумму ${e.value}. Баланс: ${repository.account.amount}")
+            println(s"Аккаунт ${e.accountId} обновлен на сумму ${e.value}. Баланс: ${repository.getAccount(e.accountId).get.amount}")
             e
         }
         .to(Sink.ignore)
