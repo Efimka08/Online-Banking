@@ -14,24 +14,25 @@ GET localhost:8081/info/101
 GET localhost:8082/info/201
 
 ###
-POST localhost:8071/update/101/808/refill
+POST localhost:8071/update/0001/101/808/refill
 
 ###
-POST localhost:8071/update/201/606/refill
+POST localhost:8071/update/0002/201/606/refill
 
 ###
-POST localhost:8071/update/202/-12/withdraw
+POST localhost:8071/update/0003/201/-12/withdraw
 
 ###
-POST localhost:8071/update/301/202/refill
+POST localhost:8071/update/0004/301/202/refill
 
 ###
 POST localhost:8071/transfer
 Content-Type: application/json
 
 {
+  "transferId": 90001,
   "sourceId": 101,
-  "destinationId": 202,
+  "destinationId": 201,
   "value": 308,
   "category": "taxi"
 }
@@ -41,6 +42,7 @@ POST localhost:8071/transfer
 Content-Type: application/json
 
 {
+  "transferId": 90002,
   "sourceId": 201,
   "destinationId": 301,
   "value": 128,
