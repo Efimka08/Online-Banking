@@ -7,38 +7,28 @@ import commonkafka.WithKafka
 import model.{AccountUpdate, AccountUpdated}
 import repository.Repository
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class OperationStreams()(implicit val system: ActorSystem, executionContext: ExecutionContext)
     extends WithKafka {
     override def group: String = "operation"
 
-    var transferIdFound = false
-    def isTransferIdFound: Boolean = transferIdFound
-
-    /*kafkaSource[AccountUpdate]
-      //.filter(command => repository.getAccount(command.accountId).exists(_.amount + command.value >= 0))
-      .mapAsync(1) { command =>
-        repository
-          .update(command.accountId, command.value)
-          .map(_ => AccountUpdated(
-            accountId = command.accountId,
-            value = command.value,
-            category = command.category))
-      }
-      .to(kafkaSink)
-      .run()*/
-
-    def checkAccountUpdateEvent(transferId: Int): Unit = {
+    var transferId = 0
+    var destinationId = 0
+    def checkAccountUpdateEvent(transferId: Int, destinationId: Int): Unit = {
       println(s"была вызвана функция checkAccountUpdateEvent ${transferId}")
-      kafkaSource[AccountUpdated]
-        .filter(event => event.operationId == transferId)
-        .map { e =>
-          transferIdFound = true
-          println(s"При переводе №${e.operationId} с аккаунта ${e.accountId} была снята сумма ${e.value}.")
-          e
-        }
-        .to(Sink.ignore)
-        .run()
+      this.transferId = transferId
+      this.destinationId = destinationId
     }
+
+    kafkaSource[AccountUpdated]
+      .filter(event => event.operationId == transferId)
+      .mapAsync(1){ e =>
+        println(s"При переводе №${e.operationId} со счета ${e.accountId} была снята сумма ${-e.value}.")
+        val command = AccountUpdate(transferId+1, destinationId, -e.value, e.category)
+        produceCommand(command)
+        Future(println(s"При переводе №${transferId + 1} на счет ${destinationId} была начислена сумма ${-e.value}."))
+      }
+      .to(Sink.ignore)
+      .run()
 }
