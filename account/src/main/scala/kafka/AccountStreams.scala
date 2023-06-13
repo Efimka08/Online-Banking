@@ -20,6 +20,7 @@ class AccountStreams(repository: Repository)(implicit val system: ActorSystem, e
             repository
               .update(command.accountId, command.value)
               .map(_ => AccountUpdated(
+                  operationId = command.operationId,
                   accountId = command.accountId,
                   value = command.value,
                   category = command.category))

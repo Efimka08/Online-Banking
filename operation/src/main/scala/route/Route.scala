@@ -27,7 +27,15 @@ class Route(streams: OperationStreams, repository: Repository)(implicit ec: Exec
                 complete(command)
             }) ~
             (path("transfer") & post & entity(as[TransferStart])) { transfer =>
-                repository.transfer(transfer)
+                repository.startTransfer(transfer)
+                val transferIdFound = streams.isTransferIdFound
+                //Thread.sleep(5000)
+                if (transferIdFound) {
+                  streams.produceCommand(AccountUpdate(transfer.transferId+1, transfer.destinationId, transfer.value, transfer.category))
+                } else {
+                  println(
+                          s"Перевод №${transfer.transferId} не выполнен! На аккаунте ${transfer.sourceId} не достаточно средств для перевода.")
+                }
                 complete(transfer)
             }
 }
