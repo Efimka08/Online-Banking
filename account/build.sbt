@@ -31,3 +31,5 @@ lazy val account = (project in file("."))
     )
   )
 
+
+enablePlugins(JavaAppPackaging)

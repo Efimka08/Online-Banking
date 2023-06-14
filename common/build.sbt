@@ -22,3 +22,6 @@ lazy val common = (project in file("."))
       "io.circe" %% "circe-parser" % circeVersion
     )
   )
+
+
+enablePlugins(JavaAppPackaging)
