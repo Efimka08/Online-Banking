@@ -13,21 +13,22 @@ class OperationStreams()(implicit val system: ActorSystem, executionContext: Exe
     extends WithKafka {
     override def group: String = "operation"
 
-    var transferId = 0
+    /*var transferId = 0
     var destinationId = 0
     def checkAccountUpdateEvent(transferId: Int, destinationId: Int): Unit = {
       println(s"была вызвана функция checkAccountUpdateEvent ${transferId}")
       this.transferId = transferId
       this.destinationId = destinationId
-    }
+    }*/
 
     kafkaSource[AccountUpdated]
-      .filter(event => event.operationId == transferId)
+      //.filter(event => event.operationId == transferId)
       .mapAsync(1){ e =>
-        println(s"При переводе №${e.operationId} со счета ${e.accountId} была снята сумма ${-e.value}.")
-        val command = AccountUpdate(transferId+1, destinationId, -e.value, e.category)
+        //println(s"При переводе №${e.operationId} со счета ${e.accountId} была снята сумма ${-e.value}.")
+          val destinationId: Int = e.destinationId.getOrElse(0)
+        val command = AccountUpdate(e.operationId, destinationId, None, -e.value, e.category)
         produceCommand(command)
-        Future(println(s"При переводе №${transferId + 1} на счет ${destinationId} была начислена сумма ${-e.value}."))
+        Future(println(s"При переводе №${e.operationId} на счет ${destinationId} была начислена сумма ${-e.value}."))
       }
       .to(Sink.ignore)
       .run()
